@@ -1,2 +1,24 @@
-import {Tabs} from 'expo-router';import {MessageSquare,Library,Server,Settings} from 'lucide-react-native';import {useTheme} from '@/providers/AppProviders';
-export default function TabsLayout(){const t=useTheme();return <Tabs screenOptions={{headerShown:false,tabBarActiveTintColor:t.colors.text,tabBarInactiveTintColor:t.colors.textMuted,tabBarStyle:{backgroundColor:t.colors.surface,borderTopColor:t.colors.border,borderTopWidth:1,height:64,paddingTop:6},tabBarLabelStyle:{fontSize:11,fontWeight:'600',paddingBottom:7}}}><Tabs.Screen name="index" options={{title:'Chat',tabBarIcon:({color})=><MessageSquare size={21} color={color}/>}}/><Tabs.Screen name="conversations" options={{title:'Library',tabBarIcon:({color})=><Library size={21} color={color}/>}}/><Tabs.Screen name="providers" options={{title:'Providers',tabBarIcon:({color})=><Server size={21} color={color}/>}}/><Tabs.Screen name="settings" options={{title:'Settings',tabBarIcon:({color})=><Settings size={21} color={color}/>}}/></Tabs>}
+import { Tabs } from 'expo-router';
+import { LibraryBig, MessageCircle, Settings2, Waypoints } from 'lucide-react-native';
+import { TabBar, type TabBarProps } from '@/components/ui/TabBar';
+
+const tabs = [
+  { name: 'index', title: 'Chat', icon: MessageCircle },
+  { name: 'conversations', title: 'Library', icon: LibraryBig },
+  { name: 'providers', title: 'Providers', icon: Waypoints },
+  { name: 'settings', title: 'Settings', icon: Settings2 },
+];
+
+export default function TabsLayout() {
+  return (
+    <Tabs
+      screenOptions={{ headerShown: false, animation: 'fade' }}
+      tabBar={(props) => <TabBar {...(props as unknown as TabBarProps)} tabs={tabs} />}
+    >
+      <Tabs.Screen name="index" options={{ title: 'Chat' }} />
+      <Tabs.Screen name="conversations" options={{ title: 'Library' }} />
+      <Tabs.Screen name="providers" options={{ title: 'Providers' }} />
+      <Tabs.Screen name="settings" options={{ title: 'Settings' }} />
+    </Tabs>
+  );
+}

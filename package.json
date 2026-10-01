@@ -16,6 +16,7 @@
     "prebuild": "expo prebuild"
   },
   "dependencies": {
+    "@expo-google-fonts/space-grotesk": "^0.4.1",
     "@expo/vector-icons": "latest",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@shopify/flash-list": "2.0.2",
@@ -28,6 +29,7 @@
     "expo-haptics": "~57.0.0",
     "expo-image": "~57.0.0",
     "expo-image-picker": "~57.0.0",
+    "expo-linear-gradient": "~57.0.0",
     "expo-linking": "~57.0.0",
     "expo-router": "~57.0.24",
     "expo-secure-store": "~57.0.0",
@@ -52,8 +54,10 @@
   },
   "devDependencies": {
     "@babel/core": "latest",
+    "@tailwindcss/container-queries": "^0.1.1",
     "@testing-library/react-native": "latest",
     "@types/jest": "latest",
+    "@types/node": "^26.6.3",
     "@types/react": "latest",
     "eslint": "latest",
     "eslint-config-expo": "latest",
@@ -72,7 +76,13 @@
       "<rootDir>/tests/setup.ts"
     ],
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
-    }
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "^lucide-react-native$": "<rootDir>/node_modules/lucide-react-native/dist/cjs/lucide-react-native.js"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(.pnpm|react-native|@react-native|@react-native-community|expo|@expo|@expo-google-fonts|react-navigation|@react-navigation|@sentry/react-native|native-base|standard-navigation|nativewind|react-native-css-interop|tailwindcss|postcss|@tailwindcss))",
+      "/node_modules/react-native-reanimated/plugin/",
+      "/node_modules/@react-native/babel-preset/"
+    ]
   }
 }

@@ -1,2 +1,84 @@
-import React from 'react';import {ActivityIndicator,Pressable,StyleSheet,Text,View} from 'react-native';import type {LucideIcon} from 'lucide-react-native';import {useTheme} from '@/providers/AppProviders';
-export function Button({label,onPress,icon:Icon,variant='primary',disabled,loading,full=false}:{label:string;onPress?:()=>void;icon?:LucideIcon;variant?:'primary'|'secondary'|'danger'|'ghost';disabled?:boolean;loading?:boolean;full?:boolean}){const t=useTheme();const primary=variant==='primary',danger=variant==='danger';const bg=primary?t.colors.primary:danger?t.colors.danger:variant==='secondary'?t.colors.surfaceAlt:'transparent';const fg=primary?t.colors.primaryText:danger?'white':t.colors.text;return <Pressable accessibilityRole="button" accessibilityLabel={label} disabled={disabled||loading} onPress={onPress} style={({pressed})=>[s.root,{backgroundColor:bg,borderColor:variant==='ghost'?'transparent':t.colors.border,opacity:disabled?.45:pressed?.7:1},full&&s.full]}>{loading?<ActivityIndicator color={fg}/>:<View style={s.inner}>{Icon&&<Icon size={18} color={fg} strokeWidth={2}/>}<Text style={[s.text,{color:fg}]}>{label}</Text></View>}</Pressable>};const s=StyleSheet.create({root:{height:48,paddingHorizontal:18,borderRadius:14,borderWidth:1,alignItems:'center',justifyContent:'center'},inner:{flexDirection:'row',alignItems:'center',gap:9},text:{fontSize:15,fontWeight:'600'},full:{width:'100%'}});
+import React from 'react';
+import { ActivityIndicator, Text } from 'react-native';
+import type { LucideIcon } from 'lucide-react-native';
+import { Press } from '@/components/ui/Press';
+import { useTheme } from '@/providers/AppProviders';
+
+type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
+type Size = 'sm' | 'md';
+
+const variantClasses: Record<Variant, string> = {
+  primary: 'bg-btn border-transparent shadow-card dark:shadow-glow-accent',
+  secondary: 'bg-surface-2 border-line',
+  ghost: 'bg-transparent border-transparent',
+  danger: 'bg-danger border-transparent',
+};
+
+const textClasses: Record<Variant, string> = {
+  primary: 'text-btn-ink',
+  secondary: 'text-ink',
+  ghost: 'text-ink-2',
+  danger: 'text-danger-ink',
+};
+
+/** Icon color, per variant, as raw values (lucide needs the `color` prop). */
+const iconColors: Record<Variant, 'btnInk' | 'ink' | 'ink2' | 'dangerInk'> = {
+  primary: 'btnInk',
+  secondary: 'ink',
+  ghost: 'ink2',
+  danger: 'dangerInk',
+};
+
+const sizeClasses: Record<Size, string> = {
+  sm: 'h-11 px-4 rounded-xl',
+  md: 'h-[52px] px-6 rounded-2xl',
+};
+
+const sizeText: Record<Size, string> = { sm: 'text-[14px]', md: 'text-[15px]' };
+
+export function Button({
+  label,
+  onPress,
+  icon: Icon,
+  variant = 'primary',
+  size = 'md',
+  disabled,
+  loading,
+  full = false,
+}: {
+  label: string;
+  onPress?: () => void;
+  icon?: LucideIcon;
+  variant?: Variant;
+  size?: Size;
+  disabled?: boolean;
+  loading?: boolean;
+  full?: boolean;
+}) {
+  const t = useTheme();
+  const dim = disabled || loading;
+  const iconColor = t.colors[iconColors[variant]];
+
+  return (
+    <Press
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ disabled: dim, busy: !!loading }}
+      disabled={dim}
+      onPress={onPress}
+      scale={dim ? 1 : 0.97}
+      className={`flex-row items-center justify-center gap-2.5 border ${variantClasses[variant]} ${sizeClasses[size]} ${
+        full ? 'flex-1' : ''
+      } ${dim ? 'opacity-40' : ''}`}
+    >
+      {loading ? (
+        <ActivityIndicator size="small" color={variant === 'ghost' ? t.colors.ink2 : iconColor} />
+      ) : (
+        <>
+          {Icon && <Icon size={size === 'sm' ? 16 : 18} strokeWidth={2.2} color={iconColor} />}
+          <Text className={`font-semibold ${textClasses[variant]} ${sizeText[size]}`}>{label}</Text>
+        </>
+      )}
+    </Press>
+  );
+}

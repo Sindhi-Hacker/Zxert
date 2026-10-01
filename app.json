@@ -8,9 +8,9 @@
     "scheme": "zxert",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "splash": { "image": "./assets/splash.png", "resizeMode": "contain", "backgroundColor": "#0B0D0F" },
+    "splash": { "image": "./assets/splash.png", "resizeMode": "contain", "backgroundColor": "#0B0D09" },
     "ios": { "supportsTablet": true, "bundleIdentifier": "ai.zxert.app", "infoPlist": { "NSPhotoLibraryUsageDescription": "Zxert uses selected images as chat attachments." } },
-    "android": { "adaptiveIcon": { "foregroundImage": "./assets/adaptive-icon.png", "backgroundColor": "#0B0D0F" }, "package": "ai.zxert.app", "softwareKeyboardLayoutMode": "resize", "permissions": [] },
+    "android": { "adaptiveIcon": { "foregroundImage": "./assets/adaptive-icon.png", "backgroundColor": "#0B0D09" }, "package": "ai.zxert.app", "softwareKeyboardLayoutMode": "resize", "permissions": [] },
     "web": { "bundler": "metro", "output": "single", "favicon": "./assets/favicon.png" },
     "plugins": ["expo-router", "expo-secure-store", "expo-sqlite", ["expo-image-picker", { "photosPermission": "Allow Zxert to attach selected images to conversations." }]],
     "experiments": { "typedRoutes": true }

@@ -1,3 +1,111 @@
-import React,{useState} from 'react';import {Keyboard,Platform,Pressable,StyleSheet,TextInput,View} from 'react-native';import {ArrowUp,Paperclip,Square,SlidersHorizontal} from 'lucide-react-native';import {useTheme} from '@/providers/AppProviders';import {IconButton} from '@/components/ui/IconButton';
-export function Composer({onSend,onStop,generating,disabled}:{onSend:(v:string)=>void;onStop:()=>void;generating:boolean;disabled?:boolean}){const t=useTheme();const [text,setText]=useState('');const send=()=>{if(!text.trim()||disabled)return;onSend(text);setText('');Keyboard.dismiss();};return <View style={[s.outer,{borderColor:t.colors.border,backgroundColor:t.colors.background}]}><View style={[s.box,{borderColor:t.colors.border,backgroundColor:t.colors.surface}]}><TextInput accessibilityLabel="Message" multiline value={text} onChangeText={setText} placeholder={disabled?'Select a model to begin':'Message Zxert'} placeholderTextColor={t.colors.textMuted} selectionColor={t.colors.primary} editable={!disabled} maxLength={100000} style={[s.input,{color:t.colors.text}]} onKeyPress={e=>{if(Platform.OS==='web'&&e.nativeEvent.key==='Enter'&&!(e.nativeEvent as any).shiftKey){e.preventDefault?.();send();}}}/><View style={s.controls}><View style={s.left}><IconButton icon={Paperclip} label="Add attachment" size={38}/><IconButton icon={SlidersHorizontal} label="Generation options" size={38}/></View>{generating?<Pressable accessibilityLabel="Stop generation" onPress={onStop} style={[s.send,{backgroundColor:t.colors.text}]}><Square size={14} fill={t.colors.background} color={t.colors.background}/></Pressable>:<Pressable accessibilityLabel="Send message" disabled={!text.trim()||disabled} onPress={send} style={[s.send,{backgroundColor:t.colors.primary,opacity:!text.trim()||disabled?.4:1}]}><ArrowUp size={20} color={t.colors.primaryText} strokeWidth={2.5}/></Pressable>}</View></View></View>}
-const s=StyleSheet.create({outer:{borderTopWidth:1,paddingHorizontal:12,paddingTop:10,paddingBottom:10},box:{borderWidth:1,borderRadius:18,padding:7},input:{fontSize:16,lineHeight:22,minHeight:38,maxHeight:140,paddingHorizontal:8,paddingTop:8,textAlignVertical:'top'},controls:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginTop:4},left:{flexDirection:'row',gap:6},send:{width:38,height:38,borderRadius:12,alignItems:'center',justifyContent:'center'}});
+import React, { useState } from 'react';
+import { Keyboard, Platform, TextInput, View } from 'react-native';
+import { ArrowUp, Square } from 'lucide-react-native';
+import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
+import { useTheme } from '@/providers/AppProviders';
+import { Press } from '@/components/ui/Press';
+import { hapticTap } from '@/utils/haptics';
+
+/**
+ * Composer pill: autofocus ring, springy send button that morphs into a
+ * stop control while the assistant is streaming.
+ */
+export function Composer({
+  value,
+  onChange,
+  onSend,
+  onStop,
+  generating,
+  disabled,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  onSend: (v: string) => void;
+  onStop: () => void;
+  generating: boolean;
+  disabled?: boolean;
+}) {
+  const t = useTheme();
+  const [focused, setFocused] = useState(false);
+
+  const send = () => {
+    if (!value.trim() || disabled || generating) return;
+    onSend(value);
+    Keyboard.dismiss();
+  };
+
+  const canSend = !!value.trim() && !disabled && !generating;
+
+  return (
+    <View className="px-4 pt-1.5 pb-3">
+      <View
+        className="flex-row items-end gap-2.5 rounded-[28px] border bg-surface-2 px-4 py-2"
+        style={{
+          borderColor: focused ? t.colors.accentLine : t.colors.line,
+          shadowColor: focused ? t.colors.accent : '#000',
+          shadowOpacity: focused ? 0.18 : t.dark ? 0.35 : 0.08,
+          shadowRadius: focused ? 16 : 20,
+          shadowOffset: { width: 0, height: 8 },
+          elevation: 8,
+        }}
+      >
+        <TextInput
+          accessibilityLabel="Message"
+          multiline
+          value={value}
+          onChangeText={onChange}
+          placeholder={disabled ? 'Select a model to start' : 'Message Zxert…'}
+          placeholderTextColor={t.colors.ink3}
+          selectionColor={t.colors.accent}
+          editable={!disabled}
+          maxLength={100000}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          onKeyPress={(e) => {
+            if (Platform.OS === 'web' && e.nativeEvent.key === 'Enter' && !(e.nativeEvent as any).shiftKey) {
+              e.preventDefault?.();
+              send();
+            }
+          }}
+          className="flex-1 text-[15.5px] leading-[22px] text-ink pt-2.5 pb-2.5 max-h-[132px] min-h-[42px]"
+        />
+        {generating ? (
+          <Animated.View entering={ZoomIn.springify().damping(14)}>
+            <Press
+              accessibilityRole="button"
+              accessibilityLabel="Stop generation"
+              onPress={() => {
+                hapticTap();
+                onStop();
+              }}
+              scale={0.88}
+              className="w-[42px] h-[42px] rounded-full items-center justify-center mb-0.5"
+              style={{ backgroundColor: t.colors.danger, elevation: 4 }}
+            >
+              <Square size={15} fill={t.colors.dangerInk} color={t.colors.dangerInk} strokeWidth={2.5} />
+            </Press>
+          </Animated.View>
+        ) : (
+          <Animated.View entering={FadeIn.duration(120)}>
+            <Press
+              accessibilityRole="button"
+              accessibilityLabel="Send message"
+              disabled={!canSend}
+              onPress={() => {
+                hapticTap();
+                send();
+              }}
+              scale={0.88}
+              className={`w-[42px] h-[42px] rounded-full items-center justify-center mb-0.5 ${
+                canSend ? 'bg-btn dark:shadow-glow-accent' : 'bg-surface-3 border border-line'
+              }`}
+              style={canSend ? { elevation: 4 } : undefined}
+            >
+              <ArrowUp size={20} strokeWidth={2.6} color={canSend ? t.colors.btnInk : t.colors.ink3} />
+            </Press>
+          </Animated.View>
+        )}
+      </View>
+    </View>
+  );
+}

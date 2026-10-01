@@ -1,2 +1,20 @@
-import {Redirect} from 'expo-router';import {ActivityIndicator,View} from 'react-native';import {useAppStore} from '@/store/appStore';import {useTheme} from '@/providers/AppProviders';
-export default function Index(){const {hydrated,providers}=useAppStore();const t=useTheme();if(!hydrated)return <View style={{flex:1,alignItems:'center',justifyContent:'center',backgroundColor:t.colors.background}}><ActivityIndicator color={t.colors.primary}/></View>;return <Redirect href={providers.length?'/(tabs)':'/onboarding'}/>}
+import { Redirect } from 'expo-router';
+import { View } from 'react-native';
+import { useAppStore } from '@/store/appStore';
+import { useTheme } from '@/providers/AppProviders';
+import { Brand } from '@/components/ui/Brand';
+
+export default function Index() {
+  const { hydrated, providers } = useAppStore();
+  const t = useTheme();
+
+  if (!hydrated) {
+    return (
+      <View className="flex-1 items-center justify-center" style={{ backgroundColor: t.colors.canvas }}>
+        <Brand compact size={42} />
+      </View>
+    );
+  }
+
+  return <Redirect href={providers.length ? '/(tabs)' : '/onboarding'} />;
+}
