@@ -1,0 +1,2 @@
+import {redactSensitive,safeError} from '@/utils/redact';
+describe('privacy utilities',()=>{it('recursively removes secrets',()=>expect(redactSensitive({Authorization:'Bearer secret',nested:{api_key:'key'}})).toEqual({Authorization:'[REDACTED]',nested:{api_key:'[REDACTED]'}}));it('sanitizes key-shaped error text',()=>expect(safeError(new Error('failed Bearer abc.def'))).not.toContain('abc.def'));});

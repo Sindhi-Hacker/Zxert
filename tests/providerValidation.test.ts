@@ -1,0 +1,3 @@
+import {providerSchema} from '@/models/schemas';
+const valid={id:'p1',name:'Example',baseUrl:'https://api.example.com',adapter:'openai-chat',enabled:true,order:0,authStyle:'bearer',customHeaders:{},endpoint:{chatPath:'/v1/chat/completions',modelsPath:'/v1/models',method:'POST'},timeoutMs:60000,streaming:true,allowInsecureHttp:false,createdAt:1,updatedAt:1};
+describe('providerSchema',()=>{it('accepts secure custom providers',()=>expect(providerSchema.safeParse(valid).success).toBe(true));it('rejects insecure remote endpoints',()=>expect(providerSchema.safeParse({...valid,baseUrl:'http://api.example.com'}).success).toBe(false));it('allows local development endpoints',()=>expect(providerSchema.safeParse({...valid,baseUrl:'http://localhost:8080'}).success).toBe(true));});

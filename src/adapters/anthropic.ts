@@ -1,0 +1,7 @@
+import { BaseAdapter } from './base';import { decodeAnthropicChunk } from './streamParser';import { joinUrl,type AdapterContext,type ChatRequest } from './providerAdapter';
+export class AnthropicAdapter extends BaseAdapter{
+ buildHeaders(c:AdapterContext){const h=super.buildHeaders(c);delete h.Authorization;if(c.apiKey)h['x-api-key']=c.apiKey;h['anthropic-version']=h['anthropic-version']??'2023-06-01';return h;}
+ buildRequest(c:AdapterContext,r:ChatRequest){const system=r.messages.filter(m=>m.role==='system').flatMap(m=>m.blocks).filter(b=>b.type==='text').map(b=>b.text).join('\n');const messages=r.messages.filter(m=>m.role!=='system').map(m=>({role:m.role==='assistant'?'assistant':'user',content:m.blocks.filter(b=>b.type==='text').map(b=>b.text).join('\n')}));return{url:joinUrl(c.provider.baseUrl,c.provider.endpoint.chatPath),init:{method:c.provider.endpoint.method,headers:this.buildHeaders(c),signal:c.signal,body:JSON.stringify({model:r.model,messages,system:system||undefined,max_tokens:r.options?.maxTokens??4096,temperature:r.options?.temperature,top_p:r.options?.topP,stream:r.stream,...r.options?.custom})}};}
+ parseResponse(v:any){const t=v?.content?.filter((b:any)=>b.type==='text').map((b:any)=>b.text).join('');if(typeof t!=='string')throw new Error('The provider returned no assistant text');return t;}parseStreamEvent=decodeAnthropicChunk;
+ async discoverModels(c:AdapterContext){try{return await super.discoverModels(c);}catch(e){if(!c.provider.endpoint.modelsPath)return[];throw e;}}
+}
