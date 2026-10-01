@@ -1,0 +1,2 @@
+import {Redirect} from 'expo-router';import {ActivityIndicator,View} from 'react-native';import {useAppStore} from '@/store/appStore';import {useTheme} from '@/providers/AppProviders';
+export default function Index(){const {hydrated,providers}=useAppStore();const t=useTheme();if(!hydrated)return <View style={{flex:1,alignItems:'center',justifyContent:'center',backgroundColor:t.colors.background}}><ActivityIndicator color={t.colors.primary}/></View>;return <Redirect href={providers.length?'/(tabs)':'/onboarding'}/>}
