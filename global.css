@@ -1,3 +1,97 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ==========================================================================
+   Zxert design tokens — "Acid Botanical"
+   A layered, green-tinted graphite system with an electric lime accent.
+   Light values live in :root, dark overrides in .dark (darkMode: 'class').
+   ========================================================================== */
+:root {
+  /* Layered surfaces */
+  --color-canvas: #F4F6EF;
+  --color-canvas-2: #EBEFE2;
+  --color-surface: #FFFFFF;
+  --color-surface-2: #FAFBF5;
+  --color-surface-3: #EFF2E6;
+
+  /* Ink (text) scale */
+  --color-ink: #171C12;
+  --color-ink-2: #56604B;
+  --color-ink-3: #8B9680;
+
+  /* Hairlines & borders */
+  --color-line: #E2E7D6;
+  --color-line-2: #CFD6BF;
+
+  /* Signature accent */
+  --color-accent: #3F7D1E;
+  --color-accent-ink: #F4FFEA;
+  --color-accent-soft: #E7F3D6;
+  --color-accent-line: #C3DFA0;
+
+  /* Primary action */
+  --color-btn: #171C12;
+  --color-btn-ink: #F7FAF0;
+
+  /* Danger */
+  --color-danger: #C0392B;
+  --color-danger-soft: #FBEAE6;
+  --color-danger-ink: #FFFFFF;
+
+  /* User chat bubble */
+  --color-bubble: #E4EFD2;
+  --color-bubble-ink: #1B2410;
+
+  /* Translucents (pre-mixed; alpha modifiers don't work on var colors) */
+  --color-header: rgba(244, 246, 239, 0.88);
+  --color-glass: rgba(255, 255, 255, 0.72);
+  --color-veil: rgba(20, 26, 14, 0.45);
+
+  /* Aurora glows */
+  --color-glow-1: rgba(155, 225, 93, 0.20);
+  --color-glow-2: rgba(64, 205, 178, 0.13);
+  --color-glow-3: rgba(139, 124, 246, 0.10);
+
+  --color-shadow: rgba(26, 36, 15, 0.10);
+}
+
+.dark {
+  --color-canvas: #0B0D09;
+  --color-canvas-2: #0E110B;
+  --color-surface: #131611;
+  --color-surface-2: #1A1E17;
+  --color-surface-3: #22271E;
+
+  --color-ink: #F1F5E9;
+  --color-ink-2: #A5B097;
+  --color-ink-3: #6F7A64;
+
+  --color-line: #242A20;
+  --color-line-2: #333B2C;
+
+  --color-accent: #9BE15D;
+  --color-accent-ink: #111A06;
+  --color-accent-soft: #1D2A13;
+  --color-accent-line: #41602A;
+
+  --color-btn: #9BE15D;
+  --color-btn-ink: #111A06;
+
+  --color-danger: #FF8578;
+  --color-danger-soft: #3A1D18;
+  --color-danger-ink: #24100C;
+
+  --color-bubble: #26331A;
+  --color-bubble-ink: #EAF4DC;
+
+  --color-header: rgba(11, 13, 9, 0.86);
+  --color-glass: rgba(19, 22, 17, 0.72);
+  --color-veil: rgba(0, 0, 0, 0.60);
+
+  --color-glow-1: rgba(155, 225, 93, 0.16);
+  --color-glow-2: rgba(64, 205, 178, 0.10);
+  --color-glow-3: rgba(139, 124, 246, 0.09);
+
+  --color-shadow: rgba(0, 0, 0, 0.45);
+}
